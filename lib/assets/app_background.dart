@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 
 class AppBackground extends StatelessWidget {
   final Animation<double> animation;
+  final double scrollOffset;
 
-  const AppBackground({super.key, required this.animation});
+  const AppBackground({
+    super.key,
+    required this.animation,
+    required this.scrollOffset,
+  });
 
   @override
   Widget build(BuildContext context) {
