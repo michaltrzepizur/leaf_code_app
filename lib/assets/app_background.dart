@@ -27,7 +27,7 @@ class AppBackground extends StatelessWidget {
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    Color(0xAB70EF34),
+                    Color.fromRGBO(112, 239, 52, 0.671),
                     Colors.transparent,
                   ],
                 ),
@@ -49,7 +49,7 @@ class AppBackground extends StatelessWidget {
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    Color(0xCC00F0FF),
+                    Color.fromRGBO(0, 240, 255, 0.8),
                     Colors.transparent,
                   ],
                 ),
