@@ -258,7 +258,7 @@ class _GeneratorPageState extends State<GeneratorPage>
                   end: alignment == Alignment.topLeft
                       ? Alignment.bottomRight
                       : Alignment.topLeft,
-                  colors: [mainColor, secondaryColor],
+                  colors: const [mainColor, secondaryColor],
                 )
               : LinearGradient(
                   begin: alignment,
