@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../assets/app_background.dart';
-import '../features/generator/generator_page.dart';
+import '../features/generator/cubit/generator_page.dart';
 import 'scanner_page.dart';
 
 class HomePage extends StatefulWidget {

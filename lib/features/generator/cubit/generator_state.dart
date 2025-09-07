@@ -1,21 +1,16 @@
-part of 'generator_cubit.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class GeneratorState {
-  final String text;
-  final bool isQrCode;
+part 'generator_state.freezed.dart';
 
-  GeneratorState({
-    this.text = '',
-    this.isQrCode = true,
-  });
-
-  GeneratorState copyWith({
-    String? text,
-    bool? isQrCode,
-  }) {
-    return GeneratorState(
-      text: text ?? this.text,
-      isQrCode: isQrCode ?? this.isQrCode,
-    );
-  }
+@freezed
+abstract class GeneratorState with _$GeneratorState {
+  const factory GeneratorState.initial() = GeneratorInitial;
+  const factory GeneratorState.success({
+    required String qrCodeData,
+    required String barcodeData,
+    required bool isQrCode,
+  }) = GeneratorSuccess;
+  const factory GeneratorState.failure({
+    required String message,
+  }) = GeneratorFailure;
 }

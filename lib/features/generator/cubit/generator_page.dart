@@ -8,7 +8,8 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../assets/app_background.dart';
-import 'cubit/generator_cubit.dart';
+import 'generator_cubit.dart';
+import 'generator_state.dart';
 
 class GeneratorPage extends StatefulWidget {
   const GeneratorPage({super.key});
@@ -35,6 +36,13 @@ class _GeneratorPageState extends State<GeneratorPage>
     _animation = Tween<double>(begin: 0.9, end: 1.1).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
+
+    // Połącz TextController z Cubit
+    _textController.addListener(() {
+      context.read<GeneratorCubit>().setInputText(_textController.text);
+    });
+    // Wyczyść stan Cubit za każdym razem, gdy strona jest inicjalizowana.
+    context.read<GeneratorCubit>().setInputText('');
   }
 
   @override
@@ -138,8 +146,8 @@ class _GeneratorPageState extends State<GeneratorPage>
     );
   }
 
-  // Metoda do budowania przycisku zapisu.
-  Widget _buildSaveButton(BuildContext context) {
+  // Metoda do budowania przycisku zapisu, przyjmuje dane do zapisu jako parametr.
+  Widget _buildSaveButton(BuildContext context, {required String data}) {
     Future<void> saveImage() async {
       final status = await Permission.storage.request();
       if (status.isGranted) {
@@ -184,7 +192,7 @@ class _GeneratorPageState extends State<GeneratorPage>
       width: 150,
       height: 45,
       child: ElevatedButton(
-        onPressed: saveImage,
+        onPressed: data.isNotEmpty ? saveImage : null,
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.zero,
           shape: RoundedRectangleBorder(
@@ -271,8 +279,50 @@ class _GeneratorPageState extends State<GeneratorPage>
                                   BorderRadius.all(Radius.circular(20))),
                         ),
                         style: const TextStyle(color: Colors.white),
-                        onChanged: (text) =>
-                            context.read<GeneratorCubit>().setInputText(text),
+                      ),
+                      const SizedBox(height: 20),
+                      // Używamy `state.when` do obsługi różnych stanów
+                      state.when(
+                        initial: () {
+                          return const Text(
+                            'Wprowadź tekst, aby wygenerować kod',
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                            textAlign: TextAlign.center,
+                          );
+                        },
+                        success: (qrCodeData, barcodeData, isQrCode) {
+                          return Column(
+                            children: [
+                              // Warunek dla `RepaintBoundary`
+                              RepaintBoundary(
+                                key: _globalKey,
+                                child: Container(
+                                  padding: const EdgeInsets.all(16.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: isQrCode
+                                      ? _buildQrCodeWidget(qrCodeData)
+                                      : _buildBarcodeWidget(barcodeData),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              _buildSaveButton(
+                                context,
+                                data: isQrCode ? qrCodeData : barcodeData,
+                              ),
+                            ],
+                          );
+                        },
+                        failure: (message) {
+                          return Text(
+                            'Wystąpił błąd: $message',
+                            style: const TextStyle(
+                                fontSize: 16, color: Colors.red),
+                            textAlign: TextAlign.center,
+                          );
+                        },
                       ),
                       const SizedBox(height: 20),
                       Row(
@@ -280,7 +330,7 @@ class _GeneratorPageState extends State<GeneratorPage>
                         children: [
                           _buildGradientButton(
                             'QR Code',
-                            state.isQrCode,
+                            state is GeneratorSuccess ? state.isQrCode : true,
                             () => context
                                 .read<GeneratorCubit>()
                                 .toggleCodeType(true),
@@ -288,7 +338,7 @@ class _GeneratorPageState extends State<GeneratorPage>
                           ),
                           _buildGradientButton(
                             'Kod Kreskowy',
-                            !state.isQrCode,
+                            state is GeneratorSuccess ? !state.isQrCode : false,
                             () => context
                                 .read<GeneratorCubit>()
                                 .toggleCodeType(false),
@@ -296,34 +346,6 @@ class _GeneratorPageState extends State<GeneratorPage>
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
-                      if (state.text.isNotEmpty)
-                        RepaintBoundary(
-                          key: _globalKey,
-                          child: Container(
-                            padding: const EdgeInsets.all(16.0),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: state.isQrCode
-                                ? _buildQrCodeWidget(state.text)
-                                : _buildBarcodeWidget(state.text),
-                          ),
-                        ),
-                      if (state.text.isEmpty)
-                        const Text(
-                          'Wprowadź tekst, aby wygenerować kod',
-                          style: TextStyle(fontSize: 16, color: Colors.white),
-                          textAlign: TextAlign.center,
-                        ),
-                      if (state.text.isNotEmpty)
-                        Column(
-                          children: [
-                            const SizedBox(height: 20),
-                            _buildSaveButton(context),
-                          ],
-                        ),
                     ],
                   ),
                 ),
