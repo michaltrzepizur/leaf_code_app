@@ -37,11 +37,9 @@ class _GeneratorPageState extends State<GeneratorPage>
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
 
-    // Połącz TextController z Cubit
     _textController.addListener(() {
       context.read<GeneratorCubit>().setInputText(_textController.text);
     });
-    // Wyczyść stan Cubit za każdym razem, gdy strona jest inicjalizowana.
     context.read<GeneratorCubit>().setInputText('');
   }
 
@@ -252,14 +250,15 @@ class _GeneratorPageState extends State<GeneratorPage>
       body: Stack(
         children: [
           AppBackground(animation: _animation, scrollOffset: _scrollOffset),
-          BlocBuilder<GeneratorCubit, GeneratorState>(
-            builder: (context, state) {
-              return Center(
-                child: SingleChildScrollView(
+          SafeArea(
+            child: BlocBuilder<GeneratorCubit, GeneratorState>(
+              builder: (context, state) {
+                return SingleChildScrollView(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
+                      const SizedBox(height: 50),
                       TextField(
                         controller: _textController,
                         decoration: const InputDecoration(
@@ -281,7 +280,6 @@ class _GeneratorPageState extends State<GeneratorPage>
                         style: const TextStyle(color: Colors.white),
                       ),
                       const SizedBox(height: 20),
-                      // Używamy `state.when` do obsługi różnych stanów
                       state.when(
                         initial: () {
                           return const Text(
@@ -293,7 +291,6 @@ class _GeneratorPageState extends State<GeneratorPage>
                         success: (qrCodeData, barcodeData, isQrCode) {
                           return Column(
                             children: [
-                              // Warunek dla `RepaintBoundary`
                               RepaintBoundary(
                                 key: _globalKey,
                                 child: Container(
@@ -348,9 +345,9 @@ class _GeneratorPageState extends State<GeneratorPage>
                       ),
                     ],
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         ],
       ),

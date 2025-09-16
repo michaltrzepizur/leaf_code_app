@@ -12,9 +12,6 @@ class LeafCodeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Używamy BlocProvider, aby dostarczyć GeneratorCubit do drzewa widgetów.
-    // Dzięki temu, każdy widżet w aplikacji (zwłaszcza GeneratorPage)
-    // będzie miał do niego dostęp.
     return BlocProvider(
       create: (context) => GeneratorCubit(),
       child: MaterialApp(
