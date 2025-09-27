@@ -12,20 +12,21 @@ dependencies:
   flutter:
     sdk: flutter
   qr_flutter: ^4.1.0
+  http: ^1.2.1 # Dodajemy http
   barcode_widget: ^2.0.4
   image_gallery_saver: ^2.0.3
   permission_handler: ^11.3.1
   animated_text_kit: ^4.2.2
   cupertino_icons: ^1.0.8
-  flutter_bloc: ^8.1.5 # Dodane
-  freezed_annotation: ^2.4.4 # Dodane
+  flutter_bloc: ^8.1.5 
+  freezed_annotation: ^2.4.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
-  build_runner: ^2.4.13 # Dodane
-  freezed: ^2.5.7 # Dodane
+  build_runner: ^2.4.13 
+  freezed: ^2.5.7
 
 flutter:
 
