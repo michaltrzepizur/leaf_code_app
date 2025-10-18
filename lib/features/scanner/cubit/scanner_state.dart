@@ -1,26 +1,25 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:flutter/foundation.dart';
-// Upewnij się, że ten import jest poprawny
-import 'package:leaf_code_app/features/scanner/cubit/scanner_model.dart';
+import '../models/scan_result_model.dart'; // Kluczowy import poprawiony!
 
 part 'scanner_state.freezed.dart';
-// USUNIĘTO: import 'package:bloc/bloc.dart';
-// USUNIĘTO: part 'scanner_cubit.dart';
 
-/// Stan skanera, modelowany za pomocą Freezed.
+// Stan skanera, modelowany za pomocą Freezed.
 @freezed
-abstract class ScannerState with _$ScannerState {
-  const factory ScannerState.initial() = InitialState;
+class ScannerState with _$ScannerState {
+  // Stan początkowy przed skanowaniem
+  const factory ScannerState.initial() = _Initial;
 
-  const factory ScannerState.loading({
-    required String scannedData,
-  }) = LoadingState;
+  // Stan ładowania (czekanie na wynik UrlCheckerService)
+  // UWAGA: Nie potrzebujemy już 'scannedData' w tym stanie
+  const factory ScannerState.loading() = _Loading; 
 
+  // Stan sukcesu (wynik gotowy do wyświetlenia)
   const factory ScannerState.success({
-    required ScanResultModel result, 
-  }) = SuccessState;
+    required ScanResultModel result,
+  }) = _Success;
 
+  // Stan błędu
   const factory ScannerState.failure({
     required String message,
-  }) = FailureState;
+  }) = _Failure;
 }

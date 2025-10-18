@@ -23,7 +23,7 @@ abstract class ScanResultModel with _$ScanResultModel {
   const factory ScanResultModel.text({
     required String text,
   }) = TextResult;
-} // <-- TUTAJ MUSI BYĆ ZAMKNIĘCIE KLAMROWE KLASY FREEZED
+}
 
 // Opcjonalna metoda pomocnicza (nie generowana przez Freezed)
 extension ScanResultModelX on ScanResultModel {

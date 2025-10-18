@@ -1,77 +1,53 @@
-// Importuje bazową klasę Cubit i rozszerzoną klasę BlocBase
 import 'package:flutter_bloc/flutter_bloc.dart';
-// Importuje definicję stanu, która nie używa już 'part'
-import 'package:leaf_code_app/features/scanner/cubit/scanner_state.dart';
-// Importuje model danych
-import 'package:leaf_code_app/features/scanner/cubit/scanner_model.dart';
-
-// UWAGA: Usunąłem 'part of 'scanner_state.dart';'. 
-// Ten plik jest teraz w pełni niezależny.
+import '../../../../services/url_checker_service.dart'; // Serwis z Kroku 1
+import '../models/scan_result_model.dart'; // Model z Kroku 2.1
+import 'scanner_state.dart'; // Stany z Kroku 2.2
 
 class ScannerCubit extends Cubit<ScannerState> {
-  ScannerCubit() : super(const ScannerState.initial());
+  // Wstrzykiwanie zależności: Cubit potrzebuje UrlCheckerService
+  final UrlCheckerService _urlCheckerService;
 
-  /// Metoda symulująca skanowanie kodu i przetwarzanie danych.
+  // Konstruktor: Ustawiamy stan początkowy
+  ScannerCubit(this._urlCheckerService) : super(const ScannerState.initial());
+
+  // Główna funkcja wywoływana przez ScannerPage
   Future<void> scanCode(String data) async {
-    if (data.isEmpty) {
-      // W przypadku braku danych, resetujemy stan do początkowego.
-      emit(const ScannerState.initial());
-      return;
-    }
+    if (data.isEmpty) return;
 
-    // Włączamy stan ładowania.
-    emit(ScannerState.loading(scannedData: data));
-
-    // Symulacja operacji sieciowej/procesowania danych.
-    await Future.delayed(const Duration(seconds: 2));
+    // 1. Poinformuj UI, że zaczynamy pracę
+    emit(const ScannerState.loading());
 
     try {
-      // Prosta logika rozpoznawania typu danych
-      if (data.startsWith('http')) {
-        // Logika bezpieczeństwa
-        final bool isSafe = data.contains('google') ||
-            data.contains('flutter') ||
-            data.contains('example');
+      // 2. Wywołaj logikę biznesową (Serwis URL rozpoznaje typ i bezpieczeństwo)
+      final processedData = await _urlCheckerService.processData(data);
 
-        emit(
-          ScannerState.success(
-            result: ScanResultModel.url(
-              url: data,
-              isSafe: isSafe,
-            ),
-          ),
-        );
-      } else if (data.length == 13 && int.tryParse(data) != null) {
-        // Symulacja wyniku dla kodu kreskowego EAN-13
-        emit(
-          ScannerState.success(
-            result: ScanResultModel.product(
-              barcode: data,
-              productName: 'Kawa Ziarnista Premium',
-              productDetails:
-                  'Wysokiej jakości kawa, palona we Włoszech. Opakowanie 250g.',
-            ),
-          ),
+      // 3. Konwertuj Mapę na Model Freezed
+      final ScanResultModel result;
+      if (processedData['type'] == 'url') {
+        result = ScanResultModel.url(
+          url: processedData['value'] as String,
+          isSafe: processedData['isSafe'] as bool,
         );
       } else {
-        // Wszystko inne traktujemy jako zwykły tekst.
-        emit(
-          ScannerState.success(
-            result: ScanResultModel.text(text: data),
-          ),
+        result = ScanResultModel.text(
+          text: processedData['value'] as String,
         );
       }
+
+      // 4. Poinformuj UI o sukcesie
+      emit(ScannerState.success(result: result));
+
+      // Opcjonalnie: Po 4 sekundach wróć do stanu initial, by umożliwić kolejne skanowanie
+      await Future.delayed(const Duration(seconds: 4));
+      emit(const ScannerState.initial());
+
     } catch (e) {
-      // W przypadku nieoczekiwanego błędu
-      emit(
-        ScannerState.failure(
-          message: 'Błąd przetwarzania danych skanowania: ${e.toString()}',
-        ),
-      );
+      // 5. Poinformuj UI o błędzie
+      emit(ScannerState.failure(message: 'Nie udało się przetworzyć danych: $e'));
     }
   }
-
-  /// Metoda do powrotu do początkowego stanu.
+  
+  // Metoda do powrotu do początkowego stanu (używana po sukcesie)
   void resetState() {
     emit(const ScannerState.initial());
   }

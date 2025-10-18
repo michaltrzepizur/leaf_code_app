@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../assets/app_background.dart';
 import '../features/generator/cubit/generator_page.dart';
 import 'scanner_page.dart';
+import '../features/scanner/cubit/scanner_cubit.dart';
+import '../services/url_checker_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -56,8 +59,17 @@ class _HomePageState extends State<HomePage>
         MaterialPageRoute(builder: (context) => const GeneratorPage()),
       );
     } else if (_dragPosition > _swipeThreshold) {
+      // ZMIANA TUTAJ: Zastępujemy proste MaterialPageRoute zagnieżdżeniem w BlocProvider
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => const ScannerPage()),
+        MaterialPageRoute(
+          builder: (context) => BlocProvider<ScannerCubit>(
+            // Wstrzykujemy Serwis bezpieczeństwa do Cubita!
+            create: (context) => ScannerCubit(
+              UrlCheckerService(),
+            ),
+            child: ScannerPage(), // ScannerPage ma teraz dostęp do Cubita
+          ),
+        ),
       );
     }
     setState(() {
@@ -87,10 +99,10 @@ class _HomePageState extends State<HomePage>
                     final double lerpFactor = (_dragPosition.abs() > 0)
                         ? (_dragPosition.clamp(-120.0, 120.0) / 120.0 + 1) / 2
                         : _controller.value;
-                    
+
                     final Color glowColor = Color.lerp(
-                      const Color(0xCC00F0FF), 
-                      const Color.fromARGB(255, 24, 255, 151), 
+                      const Color(0xCC00F0FF),
+                      const Color.fromARGB(255, 24, 255, 151),
                       lerpFactor,
                     )!;
 
@@ -104,7 +116,7 @@ class _HomePageState extends State<HomePage>
                             color: glowColor.withOpacity(0.5),
                             blurRadius: 100,
                             // Używamy animation.value do pulsowania blasku
-                            spreadRadius: _animation.value * 20, 
+                            spreadRadius: _animation.value * 20,
                           ),
                         ],
                       ),

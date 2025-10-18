@@ -19,7 +19,7 @@ mixin _$ScannerState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function(String scannedData) loading,
+    required TResult Function() loading,
     required TResult Function(ScanResultModel result) success,
     required TResult Function(String message) failure,
   }) =>
@@ -27,7 +27,7 @@ mixin _$ScannerState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
-    TResult? Function(String scannedData)? loading,
+    TResult? Function()? loading,
     TResult? Function(ScanResultModel result)? success,
     TResult? Function(String message)? failure,
   }) =>
@@ -35,7 +35,7 @@ mixin _$ScannerState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(String scannedData)? loading,
+    TResult Function()? loading,
     TResult Function(ScanResultModel result)? success,
     TResult Function(String message)? failure,
     required TResult orElse(),
@@ -43,26 +43,26 @@ mixin _$ScannerState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(InitialState value) initial,
-    required TResult Function(LoadingState value) loading,
-    required TResult Function(SuccessState value) success,
-    required TResult Function(FailureState value) failure,
+    required TResult Function(_Initial value) initial,
+    required TResult Function(_Loading value) loading,
+    required TResult Function(_Success value) success,
+    required TResult Function(_Failure value) failure,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(InitialState value)? initial,
-    TResult? Function(LoadingState value)? loading,
-    TResult? Function(SuccessState value)? success,
-    TResult? Function(FailureState value)? failure,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_Success value)? success,
+    TResult? Function(_Failure value)? failure,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(InitialState value)? initial,
-    TResult Function(LoadingState value)? loading,
-    TResult Function(SuccessState value)? success,
-    TResult Function(FailureState value)? failure,
+    TResult Function(_Initial value)? initial,
+    TResult Function(_Loading value)? loading,
+    TResult Function(_Success value)? success,
+    TResult Function(_Failure value)? failure,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -90,18 +90,18 @@ class _$ScannerStateCopyWithImpl<$Res, $Val extends ScannerState>
 }
 
 /// @nodoc
-abstract class _$$InitialStateImplCopyWith<$Res> {
-  factory _$$InitialStateImplCopyWith(
-          _$InitialStateImpl value, $Res Function(_$InitialStateImpl) then) =
-      __$$InitialStateImplCopyWithImpl<$Res>;
+abstract class _$$InitialImplCopyWith<$Res> {
+  factory _$$InitialImplCopyWith(
+          _$InitialImpl value, $Res Function(_$InitialImpl) then) =
+      __$$InitialImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$InitialStateImplCopyWithImpl<$Res>
-    extends _$ScannerStateCopyWithImpl<$Res, _$InitialStateImpl>
-    implements _$$InitialStateImplCopyWith<$Res> {
-  __$$InitialStateImplCopyWithImpl(
-      _$InitialStateImpl _value, $Res Function(_$InitialStateImpl) _then)
+class __$$InitialImplCopyWithImpl<$Res>
+    extends _$ScannerStateCopyWithImpl<$Res, _$InitialImpl>
+    implements _$$InitialImplCopyWith<$Res> {
+  __$$InitialImplCopyWithImpl(
+      _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
       : super(_value, _then);
 
   /// Create a copy of ScannerState
@@ -110,24 +110,18 @@ class __$$InitialStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$InitialStateImpl with DiagnosticableTreeMixin implements InitialState {
-  const _$InitialStateImpl();
+class _$InitialImpl implements _Initial {
+  const _$InitialImpl();
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+  String toString() {
     return 'ScannerState.initial()';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty('type', 'ScannerState.initial'));
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$InitialStateImpl);
+        (other.runtimeType == runtimeType && other is _$InitialImpl);
   }
 
   @override
@@ -137,7 +131,7 @@ class _$InitialStateImpl with DiagnosticableTreeMixin implements InitialState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function(String scannedData) loading,
+    required TResult Function() loading,
     required TResult Function(ScanResultModel result) success,
     required TResult Function(String message) failure,
   }) {
@@ -148,7 +142,7 @@ class _$InitialStateImpl with DiagnosticableTreeMixin implements InitialState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
-    TResult? Function(String scannedData)? loading,
+    TResult? Function()? loading,
     TResult? Function(ScanResultModel result)? success,
     TResult? Function(String message)? failure,
   }) {
@@ -159,7 +153,7 @@ class _$InitialStateImpl with DiagnosticableTreeMixin implements InitialState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(String scannedData)? loading,
+    TResult Function()? loading,
     TResult Function(ScanResultModel result)? success,
     TResult Function(String message)? failure,
     required TResult orElse(),
@@ -173,10 +167,10 @@ class _$InitialStateImpl with DiagnosticableTreeMixin implements InitialState {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(InitialState value) initial,
-    required TResult Function(LoadingState value) loading,
-    required TResult Function(SuccessState value) success,
-    required TResult Function(FailureState value) failure,
+    required TResult Function(_Initial value) initial,
+    required TResult Function(_Loading value) loading,
+    required TResult Function(_Success value) success,
+    required TResult Function(_Failure value) failure,
   }) {
     return initial(this);
   }
@@ -184,10 +178,10 @@ class _$InitialStateImpl with DiagnosticableTreeMixin implements InitialState {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(InitialState value)? initial,
-    TResult? Function(LoadingState value)? loading,
-    TResult? Function(SuccessState value)? success,
-    TResult? Function(FailureState value)? failure,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_Success value)? success,
+    TResult? Function(_Failure value)? failure,
   }) {
     return initial?.call(this);
   }
@@ -195,10 +189,10 @@ class _$InitialStateImpl with DiagnosticableTreeMixin implements InitialState {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(InitialState value)? initial,
-    TResult Function(LoadingState value)? loading,
-    TResult Function(SuccessState value)? success,
-    TResult Function(FailureState value)? failure,
+    TResult Function(_Initial value)? initial,
+    TResult Function(_Loading value)? loading,
+    TResult Function(_Success value)? success,
+    TResult Function(_Failure value)? failure,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -208,117 +202,81 @@ class _$InitialStateImpl with DiagnosticableTreeMixin implements InitialState {
   }
 }
 
-abstract class InitialState implements ScannerState {
-  const factory InitialState() = _$InitialStateImpl;
+abstract class _Initial implements ScannerState {
+  const factory _Initial() = _$InitialImpl;
 }
 
 /// @nodoc
-abstract class _$$LoadingStateImplCopyWith<$Res> {
-  factory _$$LoadingStateImplCopyWith(
-          _$LoadingStateImpl value, $Res Function(_$LoadingStateImpl) then) =
-      __$$LoadingStateImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String scannedData});
+abstract class _$$LoadingImplCopyWith<$Res> {
+  factory _$$LoadingImplCopyWith(
+          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
+      __$$LoadingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$LoadingStateImplCopyWithImpl<$Res>
-    extends _$ScannerStateCopyWithImpl<$Res, _$LoadingStateImpl>
-    implements _$$LoadingStateImplCopyWith<$Res> {
-  __$$LoadingStateImplCopyWithImpl(
-      _$LoadingStateImpl _value, $Res Function(_$LoadingStateImpl) _then)
+class __$$LoadingImplCopyWithImpl<$Res>
+    extends _$ScannerStateCopyWithImpl<$Res, _$LoadingImpl>
+    implements _$$LoadingImplCopyWith<$Res> {
+  __$$LoadingImplCopyWithImpl(
+      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
       : super(_value, _then);
 
   /// Create a copy of ScannerState
   /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? scannedData = null,
-  }) {
-    return _then(_$LoadingStateImpl(
-      scannedData: null == scannedData
-          ? _value.scannedData
-          : scannedData // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
-  const _$LoadingStateImpl({required this.scannedData});
+class _$LoadingImpl implements _Loading {
+  const _$LoadingImpl();
 
   @override
-  final String scannedData;
-
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'ScannerState.loading(scannedData: $scannedData)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'ScannerState.loading'))
-      ..add(DiagnosticsProperty('scannedData', scannedData));
+  String toString() {
+    return 'ScannerState.loading()';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$LoadingStateImpl &&
-            (identical(other.scannedData, scannedData) ||
-                other.scannedData == scannedData));
+        (other.runtimeType == runtimeType && other is _$LoadingImpl);
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, scannedData);
-
-  /// Create a copy of ScannerState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$LoadingStateImplCopyWith<_$LoadingStateImpl> get copyWith =>
-      __$$LoadingStateImplCopyWithImpl<_$LoadingStateImpl>(this, _$identity);
+  int get hashCode => runtimeType.hashCode;
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function(String scannedData) loading,
+    required TResult Function() loading,
     required TResult Function(ScanResultModel result) success,
     required TResult Function(String message) failure,
   }) {
-    return loading(scannedData);
+    return loading();
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
-    TResult? Function(String scannedData)? loading,
+    TResult? Function()? loading,
     TResult? Function(ScanResultModel result)? success,
     TResult? Function(String message)? failure,
   }) {
-    return loading?.call(scannedData);
+    return loading?.call();
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(String scannedData)? loading,
+    TResult Function()? loading,
     TResult Function(ScanResultModel result)? success,
     TResult Function(String message)? failure,
     required TResult orElse(),
   }) {
     if (loading != null) {
-      return loading(scannedData);
+      return loading();
     }
     return orElse();
   }
@@ -326,10 +284,10 @@ class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(InitialState value) initial,
-    required TResult Function(LoadingState value) loading,
-    required TResult Function(SuccessState value) success,
-    required TResult Function(FailureState value) failure,
+    required TResult Function(_Initial value) initial,
+    required TResult Function(_Loading value) loading,
+    required TResult Function(_Success value) success,
+    required TResult Function(_Failure value) failure,
   }) {
     return loading(this);
   }
@@ -337,10 +295,10 @@ class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(InitialState value)? initial,
-    TResult? Function(LoadingState value)? loading,
-    TResult? Function(SuccessState value)? success,
-    TResult? Function(FailureState value)? failure,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_Success value)? success,
+    TResult? Function(_Failure value)? failure,
   }) {
     return loading?.call(this);
   }
@@ -348,10 +306,10 @@ class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(InitialState value)? initial,
-    TResult Function(LoadingState value)? loading,
-    TResult Function(SuccessState value)? success,
-    TResult Function(FailureState value)? failure,
+    TResult Function(_Initial value)? initial,
+    TResult Function(_Loading value)? loading,
+    TResult Function(_Success value)? success,
+    TResult Function(_Failure value)? failure,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -361,24 +319,15 @@ class _$LoadingStateImpl with DiagnosticableTreeMixin implements LoadingState {
   }
 }
 
-abstract class LoadingState implements ScannerState {
-  const factory LoadingState({required final String scannedData}) =
-      _$LoadingStateImpl;
-
-  String get scannedData;
-
-  /// Create a copy of ScannerState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$LoadingStateImplCopyWith<_$LoadingStateImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+abstract class _Loading implements ScannerState {
+  const factory _Loading() = _$LoadingImpl;
 }
 
 /// @nodoc
-abstract class _$$SuccessStateImplCopyWith<$Res> {
-  factory _$$SuccessStateImplCopyWith(
-          _$SuccessStateImpl value, $Res Function(_$SuccessStateImpl) then) =
-      __$$SuccessStateImplCopyWithImpl<$Res>;
+abstract class _$$SuccessImplCopyWith<$Res> {
+  factory _$$SuccessImplCopyWith(
+          _$SuccessImpl value, $Res Function(_$SuccessImpl) then) =
+      __$$SuccessImplCopyWithImpl<$Res>;
   @useResult
   $Res call({ScanResultModel result});
 
@@ -386,11 +335,11 @@ abstract class _$$SuccessStateImplCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$SuccessStateImplCopyWithImpl<$Res>
-    extends _$ScannerStateCopyWithImpl<$Res, _$SuccessStateImpl>
-    implements _$$SuccessStateImplCopyWith<$Res> {
-  __$$SuccessStateImplCopyWithImpl(
-      _$SuccessStateImpl _value, $Res Function(_$SuccessStateImpl) _then)
+class __$$SuccessImplCopyWithImpl<$Res>
+    extends _$ScannerStateCopyWithImpl<$Res, _$SuccessImpl>
+    implements _$$SuccessImplCopyWith<$Res> {
+  __$$SuccessImplCopyWithImpl(
+      _$SuccessImpl _value, $Res Function(_$SuccessImpl) _then)
       : super(_value, _then);
 
   /// Create a copy of ScannerState
@@ -400,7 +349,7 @@ class __$$SuccessStateImplCopyWithImpl<$Res>
   $Res call({
     Object? result = null,
   }) {
-    return _then(_$SuccessStateImpl(
+    return _then(_$SuccessImpl(
       result: null == result
           ? _value.result
           : result // ignore: cast_nullable_to_non_nullable
@@ -421,30 +370,22 @@ class __$$SuccessStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SuccessStateImpl with DiagnosticableTreeMixin implements SuccessState {
-  const _$SuccessStateImpl({required this.result});
+class _$SuccessImpl implements _Success {
+  const _$SuccessImpl({required this.result});
 
   @override
   final ScanResultModel result;
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+  String toString() {
     return 'ScannerState.success(result: $result)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'ScannerState.success'))
-      ..add(DiagnosticsProperty('result', result));
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SuccessStateImpl &&
+            other is _$SuccessImpl &&
             (identical(other.result, result) || other.result == result));
   }
 
@@ -456,14 +397,14 @@ class _$SuccessStateImpl with DiagnosticableTreeMixin implements SuccessState {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$SuccessStateImplCopyWith<_$SuccessStateImpl> get copyWith =>
-      __$$SuccessStateImplCopyWithImpl<_$SuccessStateImpl>(this, _$identity);
+  _$$SuccessImplCopyWith<_$SuccessImpl> get copyWith =>
+      __$$SuccessImplCopyWithImpl<_$SuccessImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function(String scannedData) loading,
+    required TResult Function() loading,
     required TResult Function(ScanResultModel result) success,
     required TResult Function(String message) failure,
   }) {
@@ -474,7 +415,7 @@ class _$SuccessStateImpl with DiagnosticableTreeMixin implements SuccessState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
-    TResult? Function(String scannedData)? loading,
+    TResult? Function()? loading,
     TResult? Function(ScanResultModel result)? success,
     TResult? Function(String message)? failure,
   }) {
@@ -485,7 +426,7 @@ class _$SuccessStateImpl with DiagnosticableTreeMixin implements SuccessState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(String scannedData)? loading,
+    TResult Function()? loading,
     TResult Function(ScanResultModel result)? success,
     TResult Function(String message)? failure,
     required TResult orElse(),
@@ -499,10 +440,10 @@ class _$SuccessStateImpl with DiagnosticableTreeMixin implements SuccessState {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(InitialState value) initial,
-    required TResult Function(LoadingState value) loading,
-    required TResult Function(SuccessState value) success,
-    required TResult Function(FailureState value) failure,
+    required TResult Function(_Initial value) initial,
+    required TResult Function(_Loading value) loading,
+    required TResult Function(_Success value) success,
+    required TResult Function(_Failure value) failure,
   }) {
     return success(this);
   }
@@ -510,10 +451,10 @@ class _$SuccessStateImpl with DiagnosticableTreeMixin implements SuccessState {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(InitialState value)? initial,
-    TResult? Function(LoadingState value)? loading,
-    TResult? Function(SuccessState value)? success,
-    TResult? Function(FailureState value)? failure,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_Success value)? success,
+    TResult? Function(_Failure value)? failure,
   }) {
     return success?.call(this);
   }
@@ -521,10 +462,10 @@ class _$SuccessStateImpl with DiagnosticableTreeMixin implements SuccessState {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(InitialState value)? initial,
-    TResult Function(LoadingState value)? loading,
-    TResult Function(SuccessState value)? success,
-    TResult Function(FailureState value)? failure,
+    TResult Function(_Initial value)? initial,
+    TResult Function(_Loading value)? loading,
+    TResult Function(_Success value)? success,
+    TResult Function(_Failure value)? failure,
     required TResult orElse(),
   }) {
     if (success != null) {
@@ -534,34 +475,34 @@ class _$SuccessStateImpl with DiagnosticableTreeMixin implements SuccessState {
   }
 }
 
-abstract class SuccessState implements ScannerState {
-  const factory SuccessState({required final ScanResultModel result}) =
-      _$SuccessStateImpl;
+abstract class _Success implements ScannerState {
+  const factory _Success({required final ScanResultModel result}) =
+      _$SuccessImpl;
 
   ScanResultModel get result;
 
   /// Create a copy of ScannerState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$SuccessStateImplCopyWith<_$SuccessStateImpl> get copyWith =>
+  _$$SuccessImplCopyWith<_$SuccessImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$FailureStateImplCopyWith<$Res> {
-  factory _$$FailureStateImplCopyWith(
-          _$FailureStateImpl value, $Res Function(_$FailureStateImpl) then) =
-      __$$FailureStateImplCopyWithImpl<$Res>;
+abstract class _$$FailureImplCopyWith<$Res> {
+  factory _$$FailureImplCopyWith(
+          _$FailureImpl value, $Res Function(_$FailureImpl) then) =
+      __$$FailureImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String message});
 }
 
 /// @nodoc
-class __$$FailureStateImplCopyWithImpl<$Res>
-    extends _$ScannerStateCopyWithImpl<$Res, _$FailureStateImpl>
-    implements _$$FailureStateImplCopyWith<$Res> {
-  __$$FailureStateImplCopyWithImpl(
-      _$FailureStateImpl _value, $Res Function(_$FailureStateImpl) _then)
+class __$$FailureImplCopyWithImpl<$Res>
+    extends _$ScannerStateCopyWithImpl<$Res, _$FailureImpl>
+    implements _$$FailureImplCopyWith<$Res> {
+  __$$FailureImplCopyWithImpl(
+      _$FailureImpl _value, $Res Function(_$FailureImpl) _then)
       : super(_value, _then);
 
   /// Create a copy of ScannerState
@@ -571,7 +512,7 @@ class __$$FailureStateImplCopyWithImpl<$Res>
   $Res call({
     Object? message = null,
   }) {
-    return _then(_$FailureStateImpl(
+    return _then(_$FailureImpl(
       message: null == message
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
@@ -582,30 +523,22 @@ class __$$FailureStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FailureStateImpl with DiagnosticableTreeMixin implements FailureState {
-  const _$FailureStateImpl({required this.message});
+class _$FailureImpl implements _Failure {
+  const _$FailureImpl({required this.message});
 
   @override
   final String message;
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+  String toString() {
     return 'ScannerState.failure(message: $message)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'ScannerState.failure'))
-      ..add(DiagnosticsProperty('message', message));
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$FailureStateImpl &&
+            other is _$FailureImpl &&
             (identical(other.message, message) || other.message == message));
   }
 
@@ -617,14 +550,14 @@ class _$FailureStateImpl with DiagnosticableTreeMixin implements FailureState {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$FailureStateImplCopyWith<_$FailureStateImpl> get copyWith =>
-      __$$FailureStateImplCopyWithImpl<_$FailureStateImpl>(this, _$identity);
+  _$$FailureImplCopyWith<_$FailureImpl> get copyWith =>
+      __$$FailureImplCopyWithImpl<_$FailureImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function(String scannedData) loading,
+    required TResult Function() loading,
     required TResult Function(ScanResultModel result) success,
     required TResult Function(String message) failure,
   }) {
@@ -635,7 +568,7 @@ class _$FailureStateImpl with DiagnosticableTreeMixin implements FailureState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
-    TResult? Function(String scannedData)? loading,
+    TResult? Function()? loading,
     TResult? Function(ScanResultModel result)? success,
     TResult? Function(String message)? failure,
   }) {
@@ -646,7 +579,7 @@ class _$FailureStateImpl with DiagnosticableTreeMixin implements FailureState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(String scannedData)? loading,
+    TResult Function()? loading,
     TResult Function(ScanResultModel result)? success,
     TResult Function(String message)? failure,
     required TResult orElse(),
@@ -660,10 +593,10 @@ class _$FailureStateImpl with DiagnosticableTreeMixin implements FailureState {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(InitialState value) initial,
-    required TResult Function(LoadingState value) loading,
-    required TResult Function(SuccessState value) success,
-    required TResult Function(FailureState value) failure,
+    required TResult Function(_Initial value) initial,
+    required TResult Function(_Loading value) loading,
+    required TResult Function(_Success value) success,
+    required TResult Function(_Failure value) failure,
   }) {
     return failure(this);
   }
@@ -671,10 +604,10 @@ class _$FailureStateImpl with DiagnosticableTreeMixin implements FailureState {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(InitialState value)? initial,
-    TResult? Function(LoadingState value)? loading,
-    TResult? Function(SuccessState value)? success,
-    TResult? Function(FailureState value)? failure,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_Success value)? success,
+    TResult? Function(_Failure value)? failure,
   }) {
     return failure?.call(this);
   }
@@ -682,10 +615,10 @@ class _$FailureStateImpl with DiagnosticableTreeMixin implements FailureState {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(InitialState value)? initial,
-    TResult Function(LoadingState value)? loading,
-    TResult Function(SuccessState value)? success,
-    TResult Function(FailureState value)? failure,
+    TResult Function(_Initial value)? initial,
+    TResult Function(_Loading value)? loading,
+    TResult Function(_Success value)? success,
+    TResult Function(_Failure value)? failure,
     required TResult orElse(),
   }) {
     if (failure != null) {
@@ -695,15 +628,14 @@ class _$FailureStateImpl with DiagnosticableTreeMixin implements FailureState {
   }
 }
 
-abstract class FailureState implements ScannerState {
-  const factory FailureState({required final String message}) =
-      _$FailureStateImpl;
+abstract class _Failure implements ScannerState {
+  const factory _Failure({required final String message}) = _$FailureImpl;
 
   String get message;
 
   /// Create a copy of ScannerState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$FailureStateImplCopyWith<_$FailureStateImpl> get copyWith =>
+  _$$FailureImplCopyWith<_$FailureImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
