@@ -1,51 +1,31 @@
-import 'package:http/http.dart' as http;
-import 'dart:developer';
-import '../features/scanner/models/url_status_model.dart'; // <--- KLUCZOWY IMPORT
+import 'dart:async';
 
-// Serwis do sprawdzania URL. Zawiera logikę biznesową weryfikacji linków.
+/// Serwis odpowiedzialny za weryfikację bezpieczeństwa adresów URL.
+/// W prawdziwej aplikacji komunikowałby się z API Google Safe Browsing
+/// lub inną usługą bezpieczeństwa.
 class UrlCheckerService {
-  // Weryfikacja formatu (upewnienie się, że to URL)
-  bool _isUrl(String data) {
-    return data.startsWith('http') || data.startsWith('www.');
-  }
+  /// Sprawdza, czy podany URL jest bezpieczny.
+  /// 
+  /// Zwraca:
+  /// - `true` dla bezpiecznych URL-i.
+  /// - `false` dla URL-i oznaczonych jako niebezpieczne.
+  Future<bool> isUrlSafe(String url) async {
+    // 💡 Symulacja weryfikacji bezpieczeństwa (asynchroniczna operacja sieciowa)
+    await Future.delayed(const Duration(milliseconds: 500));
 
-  // Właściwa logika sprawdzająca bezpieczeństwo (dostępność HTTP)
-  Future<UrlStatusModel> _checkUrlSafety(String url) async {
-    // 1. Upewnienie się, że URL ma http/https
-    String checkedUrl = url.startsWith('http') ? url : 'https://$url';
-
-    try {
-      // 2. Wysyłamy zapytanie HEAD (szybsze niż GET)
-      final response = await http
-          .head(Uri.parse(checkedUrl))
-          .timeout(const Duration(seconds: 5));
-
-      // 3. Sprawdzamy status HTTP
-      if (response.statusCode >= 200 && response.statusCode < 400) {
-        // Symulacja "niebezpieczeństwa" dla linków testowych w celach demonstracyjnych
-        if (url.toLowerCase().contains('test') ||
-            url.toLowerCase().contains('malicious')) {
-          return const UrlStatusModel.malicious();
-        }
-        return const UrlStatusModel.safe();
-      } else {
-        // Status 400+: Strona niedostępna
-        return const UrlStatusModel.unknown();
-      }
-    } catch (e) {
-      // Błąd: Timeout, problem z połączeniem, nieprawidłowy format URL.
-      log('Błąd weryfikacji URL: $e');
-      return const UrlStatusModel.unknown();
+    // Symulacja logiki:
+    // Wszystkie URL-e zawierające "danger" lub "phishing" są niebezpieczne.
+    if (url.toLowerCase().contains('danger') || 
+        url.toLowerCase().contains('phishing')) {
+      return false;
     }
-  }
 
-  // 🚀 KLUCZOWA METODA DLA CUBITA
-  Future<UrlStatusModel> fetchUrlStatus(String data) async {
-    if (_isUrl(data)) {
-      return _checkUrlSafety(data);
-    } else {
-      // Jeśli nie wygląda jak URL, traktujemy jako tekst (bezpieczny)
-      return const UrlStatusModel.safe();
+    // Specjalna symulacja: Google zawsze bezpieczne
+    if (url.contains('google.com')) {
+      return true;
     }
+
+    // Domyślnie uznajemy URL za bezpieczny
+    return true;
   }
 }

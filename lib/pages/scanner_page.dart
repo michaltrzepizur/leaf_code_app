@@ -8,21 +8,17 @@ import 'package:leaf_code_app/features/scanner/cubit/scanner_state.dart';
 import 'package:leaf_code_app/features/scanner/widgets/scan_result_display.dart';
 
 class ScannerPage extends StatefulWidget {
-  // 💡 ZMIANA: StatefulWidget
   const ScannerPage({super.key});
 
   @override
   State<ScannerPage> createState() => _ScannerPageState();
 }
 
-// 💡 NOWA KLASA STANU
 class _ScannerPageState extends State<ScannerPage> {
   int _resetKey = 0;
 
-  // 💡 ZMIANA: Kontroler musi być typu late, żebyśmy mogli go zresetować
   late MobileScannerController scannerController;
 
-  // 💡 NOWA METODA: Do czystej inicjalizacji kontrolera
   void _initializeController() {
     scannerController = MobileScannerController(
       detectionSpeed: DetectionSpeed.normal,
@@ -37,24 +33,24 @@ class _ScannerPageState extends State<ScannerPage> {
     _initializeController(); // Inicjalizujemy kontroler na start
   }
 
-  // 💡 KRUCJALNA ZMIANA: ZAWSZE CZYŚCIMY KONTROLER PRZY OPUSZCZANIU STRONY!
+  // ZAWSZE CZYŚCIMY KONTROLER PRZY OPUSZCZANIU STRONY!
   @override
   void dispose() {
     scannerController.dispose();
     super.dispose();
   }
 
-  // 💡 Zostaw metodę _incrementResetKey na razie bez zmian, zmienimy ją w Kroku 2
+  // Funkcja, która wykonuje AGRESYWNY RESET KAMERY
   void _incrementResetKey() {
+    // 1. ZATRZYMUJEMY I CZYŚCIMY STARY KONTROLER
+    scannerController.stop();
+    scannerController.dispose();
+
+    // 2. TWORZYMY NOWY KONTROLER I INICJALIZUJEMY GO
+    _initializeController();
+
+    // 3. ZMIENIAMY KLUCZ WIDŻETU (co wymusza rebuild MobileScanner)
     setState(() {
-      // 1. ZATRZYMUJEMY I CZYŚCIMY STARY KONTROLER
-      scannerController.stop();
-      scannerController.dispose();
-
-      // 2. TWORZYMY NOWY KONTROLER I INICJALIZUJEMY GO
-      _initializeController();
-
-      // 3. ZMIENIAMY KLUCZ WIDŻETU (co wymusza rebuild MobileScanner)
       _resetKey++;
     });
   }
@@ -69,6 +65,13 @@ class _ScannerPageState extends State<ScannerPage> {
 
     // Pobieramy Cubit
     final ScannerCubit scannerCubit = context.read<ScannerCubit>();
+    
+    // 💡 ZMIANA 1: KLUCZOWA LINIA ŁĄCZĄCA: Przekazanie funkcji do Cubita
+    // Robimy to po zbudowaniu ramki, aby uniknąć błędów initState.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      scannerCubit.setCameraResetCallback(_incrementResetKey);
+    });
+
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -101,7 +104,6 @@ class _ScannerPageState extends State<ScannerPage> {
                         // Stan 'Initial' (lub po resecie)
                         initial: () {
                           // Jeśli jest stan initial, pokazujemy skaner
-                          // i włączamy kontroler
                           return _buildScanner(scannerCubit);
                         },
                         // Stan 'Loading'
@@ -112,12 +114,11 @@ class _ScannerPageState extends State<ScannerPage> {
                         },
                         // Stan 'Success'
                         success: (result) {
-                          // Jeśli sukces, zatrzymujemy kontroler, aby nie wariował
+                          // Jeśli sukces, zatrzymujemy kontroler
                           scannerController.stop();
                           return ScanResultDisplay(
                             result: result,
-                            cubit:
-                                scannerCubit, // Przekazujemy Cubita do przycisku reset
+                            cubit: scannerCubit, 
                           );
                         },
                         // Stan 'Failure'
@@ -142,6 +143,7 @@ class _ScannerPageState extends State<ScannerPage> {
 
   // Widżet Skanera
   Widget _buildScanner(ScannerCubit scannerCubit) {
+    // ... (kod skanera bez zmian)
     return Column(
       children: [
         Stack(
@@ -158,7 +160,6 @@ class _ScannerPageState extends State<ScannerPage> {
                   final List<Barcode> barcodes = capture.barcodes;
                   for (final barcode in barcodes) {
                     if (barcode.rawValue != null) {
-                      // 🚀 KLUCZOWA ZMIANA: WYWOŁANIE CUBITA!
                       // Cubit sam zdecyduje, czy skanowanie jest zablokowane
                       scannerCubit.scanCode(barcode.rawValue!);
                     }
@@ -211,8 +212,8 @@ class _ScannerPageState extends State<ScannerPage> {
         const SizedBox(height: 20),
         ElevatedButton.icon(
           onPressed: () {
-            cubit.resetScanner();
-            _incrementResetKey();
+            // 💡 ZMIANA 2: JEDNO WYWOŁANIE. Cubit wywoła funkcję _incrementResetKey!
+            cubit.resetScanner(); 
           },
           icon: const Icon(Icons.restart_alt),
           label: const Text('Spróbuj ponownie'),
