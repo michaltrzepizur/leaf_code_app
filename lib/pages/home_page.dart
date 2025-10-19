@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage>
             create: (context) => ScannerCubit(
               UrlCheckerService(),
             ),
-            child: ScannerPage(), // ScannerPage ma teraz dostęp do Cubita
+            child: const ScannerPage(), // ScannerPage ma teraz dostęp do Cubita
           ),
         ),
       );

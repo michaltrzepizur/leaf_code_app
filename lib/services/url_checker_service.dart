@@ -1,52 +1,51 @@
 import 'package:http/http.dart' as http;
-import 'dart:developer'; // Zastępuje print, aby usunąć ostrzeżenie lintera
+import 'dart:developer';
+import '../features/scanner/models/url_status_model.dart'; // <--- KLUCZOWY IMPORT
 
-// Serwis do sprawdzania URL - zawiera logikę biznesową niezależną od Fluttera.
+// Serwis do sprawdzania URL. Zawiera logikę biznesową weryfikacji linków.
 class UrlCheckerService {
-  // Weryfikacja formatu
+  // Weryfikacja formatu (upewnienie się, że to URL)
   bool _isUrl(String data) {
-    // Prosta heurystyka sprawdzająca, czy ciąg znaków wygląda jak URL
-    return data.startsWith('http://') || data.startsWith('https://') || data.startsWith('www.');
+    return data.startsWith('http') || data.startsWith('www.');
   }
 
   // Właściwa logika sprawdzająca bezpieczeństwo (dostępność HTTP)
-  Future<bool> _checkUrlSafety(String url) async {
+  Future<UrlStatusModel> _checkUrlSafety(String url) async {
     // 1. Upewnienie się, że URL ma http/https
     String checkedUrl = url.startsWith('http') ? url : 'https://$url';
 
     try {
       // 2. Wysyłamy zapytanie HEAD (szybsze niż GET)
-      final response = await http.head(Uri.parse(checkedUrl)).timeout(const Duration(seconds: 5));
+      final response = await http
+          .head(Uri.parse(checkedUrl))
+          .timeout(const Duration(seconds: 5));
 
       // 3. Sprawdzamy status HTTP
       if (response.statusCode >= 200 && response.statusCode < 400) {
         // Symulacja "niebezpieczeństwa" dla linków testowych w celach demonstracyjnych
-        if (url.toLowerCase().contains('test') || url.toLowerCase().contains('malicious')) {
-          return false;
+        if (url.toLowerCase().contains('test') ||
+            url.toLowerCase().contains('malicious')) {
+          return const UrlStatusModel.malicious();
         }
-        return true;
+        return const UrlStatusModel.safe();
       } else {
         // Status 400+: Strona niedostępna
-        return false;
+        return const UrlStatusModel.unknown();
       }
     } catch (e) {
       // Błąd: Timeout, problem z połączeniem, nieprawidłowy format URL.
-      // Używamy log do rejestrowania błędów, zamiast print()
       log('Błąd weryfikacji URL: $e');
-      return false;
+      return const UrlStatusModel.unknown();
     }
   }
 
   // 🚀 KLUCZOWA METODA DLA CUBITA
-  // Przetwarza dane, zwracając strukturę, którą Cubit wykorzysta do emitowania stanu.
-  Future<Map<String, dynamic>> processData(String data) async {
+  Future<UrlStatusModel> fetchUrlStatus(String data) async {
     if (_isUrl(data)) {
-      final isSafe = await _checkUrlSafety(data);
-      // Jeśli to URL, zwracamy status bezpieczeństwa
-      return {'type': 'url', 'value': data, 'isSafe': isSafe};
+      return _checkUrlSafety(data);
     } else {
-      // Jeśli to zwykły tekst, traktujemy go jako czysty tekst
-      return {'type': 'text', 'value': data};
+      // Jeśli nie wygląda jak URL, traktujemy jako tekst (bezpieczny)
+      return const UrlStatusModel.safe();
     }
   }
 }

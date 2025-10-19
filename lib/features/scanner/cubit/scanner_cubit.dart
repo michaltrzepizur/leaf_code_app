@@ -1,54 +1,68 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../services/url_checker_service.dart'; // Serwis z Kroku 1
-import '../models/scan_result_model.dart'; // Model z Kroku 2.1
-import 'scanner_state.dart'; // Stany z Kroku 2.2
+import 'package:bloc/bloc.dart';
+import '../models/scan_result_model.dart';
+import '../../../services/url_checker_service.dart';
+import 'scanner_state.dart';
 
 class ScannerCubit extends Cubit<ScannerState> {
-  // Wstrzykiwanie zależności: Cubit potrzebuje UrlCheckerService
   final UrlCheckerService _urlCheckerService;
 
-  // Konstruktor: Ustawiamy stan początkowy
+  // Zmienna blokująca wielokrotne, szybkie skanowanie
+  bool _isScanningBlocked = false;
+
   ScannerCubit(this._urlCheckerService) : super(const ScannerState.initial());
 
-  // Główna funkcja wywoływana przez ScannerPage
-  Future<void> scanCode(String data) async {
-    if (data.isEmpty) return;
+  Future<void> scanCode(String rawCode) async {
+    // Jeśli skanowanie jest zablokowane (po udanym skanie), przerywamy
+    if (_isScanningBlocked) return;
 
-    // 1. Poinformuj UI, że zaczynamy pracę
     emit(const ScannerState.loading());
 
     try {
-      // 2. Wywołaj logikę biznesową (Serwis URL rozpoznaje typ i bezpieczeństwo)
-      final processedData = await _urlCheckerService.processData(data);
+      if (Uri.tryParse(rawCode)?.isAbsolute == true) {
+        // To jest URL
 
-      // 3. Konwertuj Mapę na Model Freezed
-      final ScanResultModel result;
-      if (processedData['type'] == 'url') {
-        result = ScanResultModel.url(
-          url: processedData['value'] as String,
-          isSafe: processedData['isSafe'] as bool,
-        );
+        // 🚨 POPRAWKA 1: Zmieniamy 'checkUrl' na poprawną 'fetchUrlStatus'
+        final urlStatus = await _urlCheckerService.fetchUrlStatus(rawCode);
+
+        // Blokujemy dalsze skanowanie po sukcesie
+        _isScanningBlocked = true;
+
+        // 🚨 POPRAWKA 2: Dodajemy argument 'result' do success
+        emit(ScannerState.success(
+          result: ScanResultModel.url(
+            // <--- DODANY required 'result:'
+            url: rawCode,
+            isSafe: urlStatus.maybeWhen(
+              safe: () => true,
+              orElse: () => false,
+            ),
+          ),
+        ));
       } else {
-        result = ScanResultModel.text(
-          text: processedData['value'] as String,
-        );
+        // To jest zwykły tekst
+
+        // Blokujemy dalsze skanowanie po sukcesie
+        _isScanningBlocked = true;
+
+        // 🚨 POPRAWKA 3: Dodajemy argument 'result' do success
+        emit(ScannerState.success(
+          result: ScanResultModel.text(
+              text: rawCode), // <--- DODANY required 'result:'
+        ));
       }
-
-      // 4. Poinformuj UI o sukcesie
-      emit(ScannerState.success(result: result));
-
-      // Opcjonalnie: Po 4 sekundach wróć do stanu initial, by umożliwić kolejne skanowanie
-      await Future.delayed(const Duration(seconds: 4));
-      emit(const ScannerState.initial());
-
     } catch (e) {
-      // 5. Poinformuj UI o błędzie
-      emit(ScannerState.failure(message: 'Nie udało się przetworzyć danych: $e'));
+      // W przypadku błędu odblokowujemy, by spróbować ponownie
+      _isScanningBlocked = false;
+
+      // 🚨 POPRAWKA 4: Dodajemy argument 'message' do failure
+      emit(ScannerState.failure(
+          message: e.toString())); // <--- DODANY required 'message:'
     }
   }
-  
-  // Metoda do powrotu do początkowego stanu (używana po sukcesie)
-  void resetState() {
+
+  // Metoda publiczna do resetowania stanu skanera
+  void resetScanner() {
+    _isScanningBlocked = false;
     emit(const ScannerState.initial());
   }
 }
